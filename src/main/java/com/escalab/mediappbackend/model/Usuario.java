@@ -22,8 +22,8 @@ public class Usuario {
     @ManyToMany
     @JoinTable(
             name = "usuario_rol",
-            joinColumns = @JoinColumn(name = "id_usuario"),
-            inverseJoinColumns = @JoinColumn(name = "id_rol"))
+            joinColumns = @JoinColumn(name = "id_usuario", referencedColumnName = "idUsuario"),
+            inverseJoinColumns = @JoinColumn(name = "id_rol", referencedColumnName = "idRol"))
     private List<Rol> rols;
 
     public Integer getIdUsuario() {
