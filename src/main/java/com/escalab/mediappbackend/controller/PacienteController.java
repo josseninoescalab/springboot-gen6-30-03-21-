@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -39,7 +40,7 @@ public class PacienteController {
     }
 
     @PostMapping
-    public ResponseEntity<Paciente> save(@RequestBody Paciente paciente){
+    public ResponseEntity<Paciente> save(@RequestBody @Valid Paciente paciente){
         return pacienteService.save(paciente);
     }
 
