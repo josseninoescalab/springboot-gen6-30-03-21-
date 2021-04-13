@@ -35,12 +35,12 @@ public class PacienteController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Paciente> findById(@PathVariable("id") Integer id){
+    public Paciente findById(@PathVariable("id") Integer id) throws Exception {
         return pacienteService.findById(id);
     }
 
     @PostMapping
-    public ResponseEntity<Paciente> save(@RequestBody @Valid Paciente paciente){
+    public Paciente save(@RequestBody Paciente paciente){
         return pacienteService.save(paciente);
     }
 
@@ -50,7 +50,7 @@ public class PacienteController {
     }
 
     @DeleteMapping("/{id}")
-    public String deleteById(@PathVariable("id") Integer id){
+    public String deleteById(@PathVariable("id") Integer id) throws Exception {
         pacienteService.deleteById(id);
         return "Paciente eliminado correctamente";
     }

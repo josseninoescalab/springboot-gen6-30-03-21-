@@ -4,12 +4,12 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-public interface CRUDI<E> {
+public interface ICRUD<E> {
 
-    ResponseEntity<E> findById(Integer id);
+    E findById(Integer id) throws Exception;
     List<E> findAll();
-    ResponseEntity<E> save(E e);
+    E save(E e);
     E update(E e);
-    void deleteById(Integer id);
+    boolean deleteById(Integer id) throws Exception;
 
 }

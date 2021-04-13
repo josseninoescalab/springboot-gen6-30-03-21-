@@ -2,7 +2,6 @@ package com.escalab.mediappbackend.model;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -26,7 +25,7 @@ public class Consulta {
 
     @ManyToOne
     @JoinColumn(name = "id_especialidad", nullable = false, foreignKey = @ForeignKey(name = "FK_consulta_especialidad"))
-    private Espcialidad espcialidad;
+    private Especialidad espcialidad;
 
     @Column(name = "num_consultorio", length = 3, nullable = true)
     private String numConsultorio;
@@ -58,11 +57,11 @@ public class Consulta {
         this.medico = medico;
     }
 
-    public Espcialidad getEspcialidad() {
+    public Especialidad getEspcialidad() {
         return espcialidad;
     }
 
-    public void setEspcialidad(Espcialidad espcialidad) {
+    public void setEspcialidad(Especialidad espcialidad) {
         this.espcialidad = espcialidad;
     }
 
