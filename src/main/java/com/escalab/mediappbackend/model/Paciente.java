@@ -1,5 +1,8 @@
 package com.escalab.mediappbackend.model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +12,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 
+@ApiModel(description = "Información o propiedades del paciente")
 @Entity
 @Table(name = "paciente")
 public class Paciente {
@@ -18,6 +22,7 @@ public class Paciente {
     @Column(name = "id_paciente")
     private Integer idPaciente;
 
+    @ApiModelProperty(notes = "Nombre dene tener como minimo 5 caracteres")
     @Size(min = 5, max = 50, message = "El nombre debe contener mínimo 5 caracteres")
     @Column(name = "nombres", nullable = true, length = 50)
     private String nombres;

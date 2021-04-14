@@ -2,6 +2,9 @@ package com.escalab.mediappbackend.controller;
 
 import com.escalab.mediappbackend.model.Paciente;
 import com.escalab.mediappbackend.service.PacienteService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -29,7 +33,17 @@ public class PacienteController {
         this.pacienteService = pacienteService;
     }
 
-   @GetMapping
+    @ApiOperation(value = "Obtener todos los pacientes",
+            notes = "No necesita parametros de entrada",
+            response = List.class,
+            responseContainer = "Pacientes")
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Bad request o datos no enviados correctamente"),
+            @ApiResponse(code = 404, message = "Not found, no encontrado"),
+            @ApiResponse(code = 405, message = "No se encontraron pacientes en la BD"),
+            @ApiResponse(code = 200, message = "Peticón OK")})
+
+    @GetMapping
     public List<Paciente> findAll(){
         return pacienteService.findAll();
     }

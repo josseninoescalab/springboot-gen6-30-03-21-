@@ -1,5 +1,6 @@
 package com.escalab.mediappbackend.service.impl;
 
+import com.escalab.mediappbackend.exception.ModeloNotFoundException;
 import com.escalab.mediappbackend.model.Paciente;
 import com.escalab.mediappbackend.repository.PacienteRepository;
 import com.escalab.mediappbackend.service.PacienteService;
@@ -13,6 +14,7 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -27,7 +29,7 @@ public class PacienteServiceImpl implements PacienteService {
     public Paciente findById(Integer id) throws Exception {
         Optional<Paciente> optionalPaciente = pacienteRepository.findById(id);
         if(!optionalPaciente.isPresent()){
-            throw new Exception("ID NO ENCONTRADO: " + id);
+            throw new ModeloNotFoundException("ID NO ENCONTRADO: " + id);
         }
         return optionalPaciente.get();
     }
