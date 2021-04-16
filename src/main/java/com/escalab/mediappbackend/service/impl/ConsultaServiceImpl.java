@@ -1,11 +1,23 @@
 package com.escalab.mediappbackend.service.impl;
 
+import com.escalab.mediappbackend.dto.ConsultaDTO;
+import com.escalab.mediappbackend.dto.ConsultaListaExamenDTO;
 import com.escalab.mediappbackend.model.Consulta;
+import com.escalab.mediappbackend.model.Especialidad;
+import com.escalab.mediappbackend.model.Medico;
+import com.escalab.mediappbackend.model.Paciente;
+import com.escalab.mediappbackend.repository.ConsultaExamenRepository;
 import com.escalab.mediappbackend.repository.ConsultaRepository;
+import com.escalab.mediappbackend.repository.PacienteRepository;
 import com.escalab.mediappbackend.service.ConsultaService;
+import com.escalab.mediappbackend.service.EspecialidadService;
+import com.escalab.mediappbackend.service.MedicoService;
+import com.escalab.mediappbackend.service.PacienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +26,18 @@ public class ConsultaServiceImpl implements ConsultaService {
 
 	@Autowired	
 	private ConsultaRepository consultaRepository;
+
+	@Autowired
+	private PacienteService pacienteService;
+
+	@Autowired
+	private MedicoService medicoService;
+
+	@Autowired
+	private EspecialidadService especialidadService;
+
+	@Autowired
+	private ConsultaExamenRepository ceRepo;
 	
 	@Override
 	public Consulta save(Consulta obj) {
@@ -50,6 +74,19 @@ public class ConsultaServiceImpl implements ConsultaService {
 		}
 		consultaRepository.deleteById(id);
 		return true;
+	}
+
+	@Transactional
+	@Override
+	public Consulta registrarTransaccional(ConsultaListaExamenDTO dto) {
+		dto.getConsulta().getDetalleConsulta().forEach(det -> {
+			det.setConsulta(dto.getConsulta());
+		});
+
+		consultaRepository.save(dto.getConsulta());
+
+		dto.getLstExamen().forEach(ex -> ceRepo.registrar(dto.getConsulta().getIdConsulta(), ex.getIdExamen()));
+		return dto.getConsulta();
 	}
 
 }

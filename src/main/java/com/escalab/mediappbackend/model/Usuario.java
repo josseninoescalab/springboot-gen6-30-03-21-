@@ -57,4 +57,12 @@ public class Usuario {
     public void setEstado(boolean estado) {
         this.estado = estado;
     }
+
+    public List<Rol> getRols() {
+        return rols;
+    }
+
+    public void setRols(List<Rol> rols) {
+        this.rols = rols;
+    }
 }
