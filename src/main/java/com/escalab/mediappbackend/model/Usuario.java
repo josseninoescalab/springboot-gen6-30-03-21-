@@ -19,7 +19,7 @@ public class Usuario {
     @Column(name = "estado")
     private boolean estado;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "usuario_rol",
             joinColumns = @JoinColumn(name = "id_usuario", referencedColumnName = "idUsuario"),
