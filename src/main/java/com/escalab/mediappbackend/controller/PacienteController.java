@@ -6,6 +6,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,7 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @RestController
-@RequestMapping("/paciente")
+@RequestMapping("/pacientes")
 public class PacienteController {
 
     private PacienteService pacienteService;
@@ -67,5 +69,11 @@ public class PacienteController {
     public String deleteById(@PathVariable("id") Integer id) throws Exception {
         pacienteService.deleteById(id);
         return "Paciente eliminado correctamente";
+    }
+
+    @GetMapping("/pageable")
+    public ResponseEntity<Page<Paciente>> listarPageable(Pageable pageable) {
+        Page<Paciente> pacientes = pacienteService.listarPageable(pageable);
+        return new ResponseEntity<Page<Paciente>>(pacientes, HttpStatus.OK);
     }
 }

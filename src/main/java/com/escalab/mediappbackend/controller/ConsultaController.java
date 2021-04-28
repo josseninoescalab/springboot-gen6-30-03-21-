@@ -2,6 +2,7 @@ package com.escalab.mediappbackend.controller;
 
 import com.escalab.mediappbackend.dto.ConsultaDTO;
 import com.escalab.mediappbackend.dto.ConsultaListaExamenDTO;
+import com.escalab.mediappbackend.dto.FiltroConsultaDTO;
 import com.escalab.mediappbackend.model.Consulta;
 import com.escalab.mediappbackend.service.ArchivoService;
 import com.escalab.mediappbackend.service.ConsultaService;
@@ -103,5 +104,19 @@ public class ConsultaController {
 		return ResponseEntity.created(location).build();
 	}
 
+	@PostMapping("/buscar")
+	public ResponseEntity<List<Consulta>> buscar(@RequestBody FiltroConsultaDTO filtro) {
+		List<Consulta> consultas = new ArrayList<>();
+
+		if (filtro != null) {
+			if (filtro.getFechaConsulta() != null) {
+				consultas = service.buscarFecha(filtro);
+			} else {
+				consultas = service.buscar(filtro);
+			}
+		}
+		return new ResponseEntity<List<Consulta>>(consultas, HttpStatus.OK);
 	}
+
+}
 
