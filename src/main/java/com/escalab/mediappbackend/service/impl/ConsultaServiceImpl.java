@@ -2,6 +2,7 @@ package com.escalab.mediappbackend.service.impl;
 
 import com.escalab.mediappbackend.dto.ConsultaDTO;
 import com.escalab.mediappbackend.dto.ConsultaListaExamenDTO;
+import com.escalab.mediappbackend.dto.ConsultaResumenDTO;
 import com.escalab.mediappbackend.dto.FiltroConsultaDTO;
 import com.escalab.mediappbackend.model.Consulta;
 import com.escalab.mediappbackend.model.Especialidad;
@@ -14,10 +15,16 @@ import com.escalab.mediappbackend.service.ConsultaService;
 import com.escalab.mediappbackend.service.EspecialidadService;
 import com.escalab.mediappbackend.service.MedicoService;
 import com.escalab.mediappbackend.service.PacienteService;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.io.File;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -101,6 +108,33 @@ public class ConsultaServiceImpl implements ConsultaService {
 	public List<Consulta> buscarFecha(FiltroConsultaDTO filtro) {
 		LocalDateTime fechaSgte = filtro.getFechaConsulta().plusDays(1);
 		return consultaRepository.buscarFecha(filtro.getFechaConsulta(), fechaSgte);
+	}
+
+	@Override
+	public List<ConsultaResumenDTO> listarResumen() {
+		List<ConsultaResumenDTO> consultas = new ArrayList<>();
+		consultaRepository.listarResumen().forEach(x -> {
+			ConsultaResumenDTO cr = new ConsultaResumenDTO();
+			cr.setCantidad(Integer.parseInt(String.valueOf(x[0])));
+			cr.setFecha(String.valueOf(x[1]));
+			consultas.add(cr);
+		});
+		return consultas;
+	}
+
+	@Override
+	public byte[] generarReporte() {
+		byte[] data = null;
+		try {
+			File file = new ClassPathResource("/reports/consultas.jasper").getFile();
+			JasperPrint print = JasperFillManager.fillReport(
+					file.getPath(), null,
+					new JRBeanCollectionDataSource(this.listarResumen()));
+			data = JasperExportManager.exportReportToPdf(print);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return data;
 	}
 
 }

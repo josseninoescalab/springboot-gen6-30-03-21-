@@ -1,6 +1,7 @@
 package com.escalab.mediappbackend.service;
 import com.escalab.mediappbackend.dto.ConsultaDTO;
 import com.escalab.mediappbackend.dto.ConsultaListaExamenDTO;
+import com.escalab.mediappbackend.dto.ConsultaResumenDTO;
 import com.escalab.mediappbackend.dto.FiltroConsultaDTO;
 import com.escalab.mediappbackend.model.Consulta;
 
@@ -13,4 +14,8 @@ public interface ConsultaService extends ICRUD<Consulta> {
     List<Consulta> buscarFecha(FiltroConsultaDTO filtro);
 
     List<Consulta> buscar(FiltroConsultaDTO filtro);
+
+    List<ConsultaResumenDTO> listarResumen();
+
+    byte[] generarReporte();
 }

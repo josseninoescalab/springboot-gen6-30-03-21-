@@ -2,6 +2,7 @@ package com.escalab.mediappbackend.controller;
 
 import com.escalab.mediappbackend.dto.ConsultaDTO;
 import com.escalab.mediappbackend.dto.ConsultaListaExamenDTO;
+import com.escalab.mediappbackend.dto.ConsultaResumenDTO;
 import com.escalab.mediappbackend.dto.FiltroConsultaDTO;
 import com.escalab.mediappbackend.model.Consulta;
 import com.escalab.mediappbackend.service.ArchivoService;
@@ -117,6 +118,21 @@ public class ConsultaController {
 		}
 		return new ResponseEntity<List<Consulta>>(consultas, HttpStatus.OK);
 	}
+
+	@GetMapping(value = "/listarResumen")
+	public ResponseEntity<List<ConsultaResumenDTO>> listarResumen() {
+		List<ConsultaResumenDTO> consultas = new ArrayList<>();
+		consultas = service.listarResumen();
+		return new ResponseEntity<List<ConsultaResumenDTO>>(consultas, HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/generarReporte", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	public ResponseEntity<byte[]> generarReporte(){
+		byte[] data = null;
+		data = service.generarReporte();
+		return new ResponseEntity<byte[]>(data, HttpStatus.OK);
+	}
+
 
 }
 
