@@ -1,7 +1,9 @@
 package com.escalab.mediappbackend.controller;
 
+import com.escalab.mediappbackend.model.ResetToken;
 import com.escalab.mediappbackend.model.Usuario;
 import com.escalab.mediappbackend.service.LoginService;
+import com.escalab.mediappbackend.service.ResetTokenService;
 import com.escalab.mediappbackend.util.EmailUtil;
 import com.escalab.mediappbackend.util.Mail;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,9 @@ public class LoginController {
     private LoginService service;
 
     @Autowired
+    private ResetTokenService tokenService;
+
+    @Autowired
     private EmailUtil emailUtil;
 
     @Autowired
@@ -39,6 +44,12 @@ public class LoginController {
         try {
             Usuario us = service.verificarNombreUsuario(correo);
             if (us != null && us.getIdUsuario() > 0) {
+
+                ResetToken token = new ResetToken();
+                token.setToken(UUID.randomUUID().toString());
+                token.setUser(us);
+                token.setExpiracion(10);
+                tokenService.guardar(token);
 
                 Mail mail = new Mail();
                 mail.setFrom("email.prueba.demo@gmail.com");
@@ -59,7 +70,7 @@ public class LoginController {
         return new ResponseEntity<Integer>(rpta, HttpStatus.OK);
     }
 
-    /*
+
     @GetMapping(value = "/restablecer/verificar/{token}")
     public ResponseEntity<Integer> restablecerClave(@PathVariable("token") String token) {
         int rpta = 0;
@@ -77,16 +88,16 @@ public class LoginController {
         }
         return new ResponseEntity<Integer>(rpta, HttpStatus.OK);
     }
-    */
+
 
     @PostMapping(value = "/restablecer/{token}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> restablecerClave(@PathVariable("token") String token, @RequestBody String clave ) {
         int rpta = 0;
         try {
-            //ResetToken rt = tokenService.findByToken(token);
+            ResetToken rt = tokenService.findByToken(token);
             String claveHash = bcrypt.encode(clave);
-            //rpta = service.cambiarClave(claveHash, rt.getUser().getUsername());
-            //tokenService.eliminar(rt);
+            rpta = service.cambiarClave(claveHash, rt.getUser().getUserName());
+            tokenService.eliminar(rt);
         } catch (Exception e) {
             return new ResponseEntity<Integer>(rpta, HttpStatus.INTERNAL_SERVER_ERROR);
         }
