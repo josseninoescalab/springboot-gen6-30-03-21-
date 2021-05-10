@@ -13,6 +13,8 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
@@ -36,9 +38,28 @@ public class PacienteTest {
 
     @Test
     public void getPaciente() throws Exception {
-        Integer pacienteId = null;
-        when(repo.findById(pacienteId)).thenReturn(Optional.of(new Paciente()));
+        Integer pacienteId = 10;
+        Paciente pc = new Paciente();
+        pc.setIdPaciente(pacienteId);
+        pc.setNombres("Prueba");
+        when(repo.findById(pacienteId)).thenReturn(Optional.of(pc));
         Paciente paciente = pacienteService.findById(pacienteId);
         assertEquals(paciente.getIdPaciente(), pacienteId);
+        assertEquals(paciente.getNombres(), "Prueba");
+    }
+
+    @Test
+    public void getAllPaciente() throws Exception {
+        Paciente pc = new Paciente();
+        pc.setIdPaciente(10);
+        pc.setNombres("Prueba");
+        pc.setApellidos("Apellidos");
+        List<Paciente> pacientes = new ArrayList<>();
+        pacientes.add(pc);
+        when(repo.findAll()).thenReturn(pacientes);
+        List<Paciente> pacienteList = pacienteService.findAll();
+        //assertEquals(pacienteList.get(0).getIdPaciente(), pc.getIdPaciente());
+        assertEquals(pacienteList.get(0).getNombres(), "Prueba");
+        assertEquals(pacienteList.get(0).getApellidos(), "Apellidos");
     }
 }

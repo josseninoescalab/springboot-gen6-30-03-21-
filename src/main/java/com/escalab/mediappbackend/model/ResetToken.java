@@ -27,6 +27,9 @@ public class ResetToken {
     @Column(nullable = false)
     private LocalDateTime expiracion;
 
+    @Column(name = "intentos")
+    private Integer count;
+
     public Integer getId() {
         return id;
     }
@@ -67,5 +70,13 @@ public class ResetToken {
 
     public boolean estaExpirado() {
         return LocalDateTime.now().isAfter(this.expiracion);
+    }
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
     }
 }

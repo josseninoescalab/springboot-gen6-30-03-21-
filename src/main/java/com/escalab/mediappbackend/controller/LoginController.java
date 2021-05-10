@@ -7,6 +7,7 @@ import com.escalab.mediappbackend.service.ResetTokenService;
 import com.escalab.mediappbackend.util.EmailUtil;
 import com.escalab.mediappbackend.util.Mail;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +39,9 @@ public class LoginController {
     @Autowired
     private BCryptPasswordEncoder bcrypt;
 
+    @Value("${reintos.token}")
+    private String count;
+
     @PostMapping(value = "/enviarCorreo", consumes = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<Integer> enviarCorreo(@RequestBody String correo) {
         int rpta = 0;
@@ -57,7 +61,7 @@ public class LoginController {
                 mail.setSubject("RESTABLECER CONTRASEÑA - MEDIAPP");
 
                 Map<String, Object> model = new HashMap<>();
-                String url = "http://localhost:4200/recuperar/" + UUID.randomUUID().toString();
+                String url = "http://localhost:4200/recuperar/" + token.getToken();
                 model.put("user", us.getUserName());
                 model.put("resetUrl", url);
                 mail.setModel(model);
@@ -79,7 +83,9 @@ public class LoginController {
                 ResetToken rt = tokenService.findByToken(token);
                 if (rt != null && rt.getId() > 0) {
                     if (!rt.estaExpirado()) {
-                        rpta = 1;
+                        if(!rt.getCount().equals(count)){
+                            rpta = 1;
+                        }
                     }
                 }
             }
